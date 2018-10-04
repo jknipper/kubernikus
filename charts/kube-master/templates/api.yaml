@@ -99,7 +99,15 @@ spec:
             items:
               - key: local-kubeconfig
                 path: kubeconfig
-      containers:
+      initContainers:
+      - name: init-myservice
+        image: byrnedo/alpine-curl
+        command:
+        - sh
+        - -c
+        args:
+        - until $(curl  --output /dev/null --silent --head --fail http://{{ include "etcd.fullname" . }}:2379/health);do printf . && sleep 5;done
+       containers:
         - name: apiserver
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           args:
