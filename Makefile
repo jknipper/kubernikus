@@ -16,17 +16,17 @@ ifneq ($(http_proxy),)
 BUILD_ARGS+= --build-arg http_proxy=$(http_proxy) --build-arg https_proxy=$(https_proxy) --build-arg no_proxy=$(no_proxy)
 endif
 
-HAS_GLIDE := $(shell command -v glide;)
-HAS_GLIDE_VC := $(shell command -v glide-vc;)
 GO_SWAGGER_VERSION := 0.13.0
 SWAGGER_BIN        := bin/$(GOOS)/swagger-$(GO_SWAGGER_VERSION)
+
+export GO111MODULE = on
 
 .PHONY: all test clean code-gen vendor
 
 all: $(BINARIES:%=bin/$(GOOS)/%)
 
 bin/$(GOOS)/swagger-%:
-	curl -f -z $@ -o $@ -L'#' https://github.com/go-swagger/go-swagger/releases/download/$*/swagger_$(GOOS)_amd64
+	curl -f --create-dirs -o $@ -L'#' https://github.com/go-swagger/go-swagger/releases/download/$*/swagger_$(GOOS)_amd64
 	chmod +x $@
 
 bin/%: $(GOFILES) Makefile
@@ -134,17 +134,7 @@ endif
 include code-generate.mk
 code-gen: client-gen informer-gen lister-gen deepcopy-gen
 
-vendor:
-ifndef HAS_GLIDE_VC
-	$(error glide-vc (vendor cleaner) not found. Run `make bootstrap to fix.`)
-endif
-	glide install -v
-	glide-vc --only-code --no-tests
+mod-vendor:
+	go mod vendor
 
 bootstrap: $(SWAGGER_BIN)
-ifndef HAS_GLIDE
-	brew install glide
-endif
-ifndef HAS_GLIDE_VC
-	go get -u github.com/sgotti/glide-vc
-endif
