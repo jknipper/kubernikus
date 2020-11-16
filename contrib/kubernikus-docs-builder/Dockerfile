@@ -1,4 +1,4 @@
-FROM alpine:3.8
+FROM alpine:3.11
 LABEL source_repository="https://github.com/sapcc/kubernikus"
 
 ARG HUGO_VERSION=0.30.2

@@ -3,7 +3,7 @@ ARG VERSION=latest
 FROM sapcc/kubernikus-binaries:$VERSION as kubernikus-binaries
 FROM sapcc/kubernikus-docs:$VERSION as kubernikus-docs
 
-FROM alpine:3.8 as kubernikus
+FROM alpine:3.11 as kubernikus
 LABEL source_repository="https://github.com/sapcc/kubernikus"
 MAINTAINER "Fabian Ruff <fabian.ruff@sap.com>"
 RUN apk add --no-cache curl iptables

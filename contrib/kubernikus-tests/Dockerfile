@@ -1,4 +1,4 @@
-FROM golang:1.11.5-alpine3.8
+FROM golang:1.14.12-alpine3.11
 LABEL source_repository="https://github.com/sapcc/kubernikus"
 
 WORKDIR /go/src/github.com/sapcc/kubernikus/
